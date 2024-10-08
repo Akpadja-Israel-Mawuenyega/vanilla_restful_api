@@ -2,8 +2,7 @@ const http = require("http");
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
-  res.setHeader("Content-Type", "text/html");
-  res.write("<h1>Yo!</h1>");
+  res.writeHead(200, { "Content-Type": "application/json" });
   res.end();
 });
 

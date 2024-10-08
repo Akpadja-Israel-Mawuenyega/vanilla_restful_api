@@ -1,13 +1,8 @@
-const http = require("http");
+const http = require('http')
+const PORT = process.env
 
 const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end();
-});
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify(products))
+})
 
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});

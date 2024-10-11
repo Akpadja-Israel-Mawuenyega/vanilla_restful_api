@@ -55,6 +55,8 @@ async function createProduct(req, res) {
   }
 }
 
+//@desc Updating a product
+//@route PUT /api/products
 async function updateProduct(req, res, id) {
   try {
     const product = await Product.findProduct(id);
@@ -83,6 +85,8 @@ async function updateProduct(req, res, id) {
   }
 }
 
+//@desc Deleting a product
+//@route DELETE /api/products 
 async function deleteProduct(req, res, id) {
   try {
     const product = await Product.findProduct(id);

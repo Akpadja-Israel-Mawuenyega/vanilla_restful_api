@@ -1,5 +1,5 @@
 const Product = require("../models/productModel");
-const { getPostData } = require('../utils');
+const { getPostData } = require("../utils");
 
 //@desc Getting all products
 //@route GET /api/products
@@ -36,21 +36,48 @@ async function getProduct(req, res, id) {
 //@route POST /api/products
 async function createProduct(req, res) {
   try {
-    const body = await getPostData(req)
+    const body = await getPostData(req);
+
+    const { title, description, price } = JSON.parse(body);
+
+    const product = {
+      title,
+      description,
+      price,
+    };
+
+    const newProduct = await Product.create(product);
+
+    res.writeHead(201, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(newProduct));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function updateProduct(req, res) {
+  try {
+    const product = await Product.findProduct(id);
+
+    if (!product) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ Response: "Product doesn't exist." }));
+    } else {
+      const body = await getPostData(req);
 
       const { title, description, price } = JSON.parse(body);
 
-      const product = {
-        title,
-        description,
-        price
+      const productData = {
+        title: title || product.title,
+        description: description || product.description,
+        price: price || product.price,
       };
 
-      const newProduct = await Product.create(product);
+      const updatedProduct = await Product.update(id, productData);
 
       res.writeHead(201, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify(newProduct));
-
+      return res.end(JSON.stringify(updatedProduct));
+    }
   } catch (error) {
     console.log(error);
   }
@@ -60,4 +87,5 @@ module.exports = {
   getProducts,
   getProduct,
   createProduct,
+  updateProduct,
 };

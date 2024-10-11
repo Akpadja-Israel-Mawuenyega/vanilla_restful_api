@@ -55,7 +55,7 @@ async function createProduct(req, res) {
   }
 }
 
-async function updateProduct(req, res) {
+async function updateProduct(req, res, id) {
   try {
     const product = await Product.findProduct(id);
 
@@ -83,9 +83,27 @@ async function updateProduct(req, res) {
   }
 }
 
+async function deleteProduct(req, res, id) {
+  try {
+    const product = await Product.findProduct(id);
+
+    if (!product) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ Response: "Product doesn't exist." }));
+    } else {
+      await Product.remove(id);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ Response: `Product ${id} removed.` }));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
+  deleteProduct
 };

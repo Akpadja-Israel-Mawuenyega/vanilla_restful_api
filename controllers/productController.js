@@ -4,7 +4,7 @@ const Product = require("../models/productModel");
 //@route GET /api/products
 async function getProducts(req, res) {
   try {
-    const products = await Product.findAll(); 
+    const products = await Product.findAll();
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(products));
@@ -34,23 +34,36 @@ async function getProduct(req, res, id) {
 //@desc Creating a product
 //@route POST /api/products
 async function createProduct(req, res) {
-    try {
+  try {
+    let body = "";
+
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      const { title, description, price } = JSON.parse(body);
+
       const product = {
-        title: "Test product",
-        description: "This is a test product.",
-        price: 100
-      }
+        title,
+        description,
+        price
+      };
 
-      const newProduct = Product.create(product)
+      const newProduct = await Product.create(product);
 
-      res.writeHead(201, {"Content-Type": "application/json"})
-      res.end(JSON.stringify(newProduct))
+    res.writeHead(201, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(newProduct));
+  
+    });
 
-    } catch (error) {
-      console.log(error);
-    }
+  } catch (error) {
+    console.log(error);
   }
+}
 
 module.exports = {
-  getProducts, getProduct
+  getProducts,
+  getProduct,
+  createProduct,
 };
